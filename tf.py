@@ -5,7 +5,15 @@ from tensorflow.keras.datasets import mnist
 # GPUが利用可能かどうかをチェック
 physical_devices = tf.config.list_physical_devices("GPU")
 if len(physical_devices) > 0:
-    tf.config.experimental.set_memory_growth(physical_devices[0], True)
+    # Restrict TensorFlow to only use the first GPU
+    try:
+        tf.config.set_visible_devices(physical_devices[0], "GPU")
+        logical_gpus = tf.config.list_logical_devices("GPU")
+        print(len(physical_devices), "Physical GPUs,", len(logical_gpus), "Logical GPU")
+    except RuntimeError as e:
+        # Visible devices must be set before GPUs have been initialized
+        print(e)
+        tf.config.experimental.set_memory_growth(physical_devices[0], True)
 print(f"Available GPUs: {physical_devices}")
 print(f'Current GPU: {physical_devices[0] if len(physical_devices) > 0 else "None"}')
 
