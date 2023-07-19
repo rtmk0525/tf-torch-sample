@@ -1,6 +1,7 @@
+import numpy as np
 import tensorflow as tf
-from tensorflow.keras import layers
-from tensorflow.keras.datasets import mnist
+from keras.layers import Dense
+from keras.models import Sequential
 
 # GPUが利用可能かどうかをチェック
 physical_devices = tf.config.list_physical_devices("GPU")
@@ -17,28 +18,18 @@ if len(physical_devices) > 0:
 print(f"Available GPUs: {physical_devices}")
 print(f'Current GPU: {physical_devices[0] if len(physical_devices) > 0 else "None"}')
 
-# MNISTデータセットの読み込み
-(x_train, y_train), (x_test, y_test) = mnist.load_data()
-
-# データの前処理
-x_train = x_train.reshape(-1, 28, 28, 1).astype("float32") / 255.0
-x_test = x_test.reshape(-1, 28, 28, 1).astype("float32") / 255.0
+# データの生成
+np.random.seed(0)
+X = np.random.rand(1000, 5)
+y = np.random.randint(2, size=(1000, 1))
 
 # モデルの構築
-model = tf.keras.Sequential(
-    [
-        layers.Conv2D(32, (3, 3), activation="relu", input_shape=(28, 28, 1)),
-        layers.MaxPooling2D((2, 2)),
-        layers.Flatten(),
-        layers.Dense(64, activation="relu"),
-        layers.Dense(10, activation="softmax"),
-    ]
-)
+model = Sequential()
+model.add(Dense(10, input_dim=5, activation="relu"))
+model.add(Dense(1, activation="sigmoid"))
 
 # モデルのコンパイル
-model.compile(
-    optimizer="adam", loss="sparse_categorical_crossentropy", metrics=["accuracy"]
-)
+model.compile(loss="binary_crossentropy", optimizer="adam", metrics=["accuracy"])
 
 # モデルのトレーニング
-model.fit(x_train, y_train, epochs=10, batch_size=64, validation_data=(x_test, y_test))
+model.fit(X, y, epochs=10, batch_size=32)
