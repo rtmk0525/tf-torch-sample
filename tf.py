@@ -11,12 +11,12 @@ if len(physical_devices) > 0:
         tf.config.set_visible_devices(physical_devices[0], "GPU")
         logical_gpus = tf.config.list_logical_devices("GPU")
         print(len(physical_devices), "Physical GPUs,", len(logical_gpus), "Logical GPU")
+        print(f"{physical_devices=}")
+        print(f"{logical_gpus=}")
     except RuntimeError as e:
         # Visible devices must be set before GPUs have been initialized
         print(e)
         tf.config.experimental.set_memory_growth(physical_devices[0], True)
-print(f"Available GPUs: {physical_devices}")
-print(f'Current GPU: {physical_devices[0] if len(physical_devices) > 0 else "None"}')
 
 # データの生成
 np.random.seed(0)
