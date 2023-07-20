@@ -1,6 +1,5 @@
 # tf-torch-sample
 tensorflow, pytorchで書かれた.py, .ipynbファイルによるGPU動作確認手順
-(注: 一般向けの内容ではありません)
 
 # 実行までの手順
 
